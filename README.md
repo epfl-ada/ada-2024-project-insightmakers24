@@ -4,21 +4,28 @@
 
 ```bash
 # clone project
-git clone <project link>
-cd <project repo>
+git clone git@github.com:epfl-ada/ada-2024-project-insightmakers24.git
+cd ada-2024-project-insightmakers24
 
 # [OPTIONAL] create conda environment
-conda create -n <env_name> python=3.11 or ...
-conda activate <env_name>
-
+conda create -n insightmakers24
+conda activate insightmakers24
 
 # install requirements
 pip install -r pip_requirements.txt
 ```
 
-
 ### How to use the library
-Tell us how the code is arranged, any explanations goes here.
+
+- `BeerConsumption.csv` file need to be in `data/BeerConsumption.csv`.
+
+- All other data directories (`BeerAdvocate`, `RateBeer` and `matched_beer_data`) need to be in `data/`.
+
+- All `.txt` files has to be converted to `.cvs` files.
+
+- `data_utils.py` contain every function use to load the dataframe used in `result.ipynb`
+
+- Run the `results.ipynb` to have get our result.
 
 
 ## Project Structure
@@ -68,7 +75,7 @@ We will use this data to explore whether a country's overall beer consumption in
 
 ## Methods
 
-Part 1: Influence of time on the ratings
+### Part 1: Influence of time on the ratings
 
 We have examined the overall ratings for all beer to see whether people rate differently through time. We will also investigate whether there are certain moments in time where the ratings are higher or lower than on average to see if there are some trends for this beer that influences its rating. Lastly we will check if certain days or weeks have a notable difference and try to link these to holidays, events or festivals to see if these can influence the rating of the beer.
 
@@ -76,21 +83,21 @@ To do this we principally use the rating.csv file from both dataset. We have ana
 
 This will show us if there is a bias introduced in the rating from all these factors and how much they influence the ratings.
 
-Part 2: Impact of initial and Anchoring Effect 
+### Part 2: Impact of initial and Anchoring Effect 
 
 As we all know, the perspective of others can influence our own opinion. So we can imagine that the initial rating will have a large impact on the final rating.
 To see this influence, we compared the first rating with the mean of every other rating. We check the correlation between these ratings, and it appears to be higher than the correlation between the last rating and the others.
 We performed Pearson and Spearman tests to see whether a higher initial rating correlates with a higher final rating. Both tests show us a clear correlation, which is expected since the rating concerne the same beer. We know that the effect of the first rating exists, it is known as  the anchoring effect, but for now we cannot affirm that what we observed was uniquely related to this effect. 
 It would be to investigate further about the anchoring effect, and also check if the ratings that were the most recents at the time when someone gave a rating have an influence, or perhaps if the rating that content some text review enhances this effect.
 
-Part 3: Country biases investigation
+### Part 3: Country biases investigation
 
 For the initial analysis, we focus on the BeerAdvocate dataset, particularly: ratings.txt, users.csv and breweries.csv. Note that ratings.txt was converted to a csv for convenience. 
 Histograms based on the ratings for both the ratings where the user comes from the same location (domestic) and the ratings where the user comes from another location (international), we notice a slight distribution difference. A t-test and mean comparisons suggest that users that come from the same country as the beer might indeed tend to give slightly higher ratings.
 
 We also merged the beer consumption dataset to the ratings and the breweries to see if there is a relation between the mean ratings per location and the beer consumption per capita in this location. We find a significant correlation between the two variables, however the country bias partly explains this correlation so we will need to first correct the ratings from the country bias. We can also explore how the bias varies depending on the country or depending on the beer type.
 
-Part 4: Influence of Beer Names on Ratings
+### Part 4: Influence of Beer Names on Ratings
 
 To investigate whether the name of a beer impacts its final rating, we will use text analysis techniques on beer names. Specifically, we will: Extract keywords from beer names. Perform sentiment analysis on these names to see if certain types of names (e.g., "Premium," "Classic") correlate with higher or lower ratings. Use statistical tests (e.g., Chi-square test) to evaluate whether specific words in the name are associated with significant rating differences. This analysis could reveal if certain types of names set expectations that influence user ratings, either positively or negatively. So far, keyword analysis yielded good initial results. However, our first attempts at sentiment analysis fell short but we will try using other techniques and libraries in hopes of better results.
 
