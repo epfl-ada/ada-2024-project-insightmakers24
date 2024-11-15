@@ -4,6 +4,8 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
+from nltk.sentiment import SentimentIntensityAnalyzer
+from textblob import TextBlob
 import string
 
 # Import useful nltk packages
@@ -246,3 +248,35 @@ def load_beer_consumption_dataframe(beer_consumption_path='data/BeerConsumption.
     merged_df = merged_df.groupby('location').agg(rating=('rating', 'mean'), beer_consumption_per_capita=('beer_consumption_per_capita', 'min'))
 
     return merged_df
+
+
+def get_sentiment_textblob(text):
+    blob = TextBlob(text)
+    score = blob.sentiment.polarity
+
+    # Map the sentiment in 1-5 range
+    return ((score + 1) * 2 )+ 1
+
+def get_sentiment_vader(text, sia):
+    # Map the sentiment in 1-5 range
+    return ((sia.polarity_scores(text)['compound'] + 1) * 2 )+ 1
+
+def load_dataframe_sentiment(DATA_PATH='data/BeerAdvocate/ratings.csv'):
+    nltk.download('vader_lexicon')
+    sia = SentimentIntensityAnalyzer()
+
+    # load the dataset
+    ratings_df = pd.read_csv(DATA_PATH)
+
+    # calculate the mean rating per beer
+    rating_per_beer = ratings_df.groupby('beer_id').agg(beer_name=('beer_name', 'min'),  rating=('rating', 'mean')).sort_values(by='rating')
+
+    # keep only usefull columns
+    rating_per_beer = rating_per_beer.dropna()
+
+    # add column for sentiment in beers name
+    rating_per_beer['name_sentiment_textblob']  = rating_per_beer['beer_name'].apply(get_sentiment_textblob)
+
+    rating_per_beer['name_sentiment_vader']  = rating_per_beer['beer_name'].apply(lambda x:get_sentiment_vader(x, sia))
+
+    return rating_per_beer
