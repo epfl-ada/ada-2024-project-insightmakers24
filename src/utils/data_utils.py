@@ -127,3 +127,122 @@ def load_country_bias_data(path):
     df_ratings_locs = df_ratings_locs.rename(columns={'location': 'beer_location'})
 
     return df_ratings_locs.dropna()
+
+
+def load_time_bias_data(path):
+    """
+    Loads and do basic cleaning for the time bias analysis
+
+    Parameters
+    ----------
+    path: The path to the analysis files
+
+    Returns
+    -------
+    Clean dataset used for the analysis
+    """
+
+    # load the data
+    time_df_reviews = pd.read_csv(os.path.join(path, 'RateBeer/reviews.csv'))
+    time_df_beerAdvocate = pd.read_csv(os.path.join(path, 'BeerAdvocate/reviews.csv'))
+
+    # Create time column from the unix format for both dataset
+    time_df_reviews['time'] = pd.to_datetime(time_df_reviews['date'], origin='unix', unit='s')
+    time_df_reviews['year'] = time_df_reviews['time'].dt.year
+    time_df_reviews['month'] = time_df_reviews['time'].dt.month
+    time_df_reviews['day'] = time_df_reviews['time'].dt.day
+    time_df_beerAdvocate['time'] = pd.to_datetime(time_df_beerAdvocate['date'], origin='unix', unit='s')
+    time_df_beerAdvocate['year'] = time_df_beerAdvocate['time'].dt.year
+    time_df_beerAdvocate['month'] = time_df_beerAdvocate['time'].dt.month
+    time_df_beerAdvocate['day'] = time_df_beerAdvocate['time'].dt.day
+
+    # Data cleaning
+    time_df_reviews = time_df_reviews.dropna()
+    time_df_beerAdvocate = time_df_beerAdvocate.dropna()
+    # Remove the beer with less than 10 reviews
+    time_df_reviews = time_df_reviews.groupby('beer_id').filter(lambda x: len(x) > 10)
+    time_df_beerAdvocate = time_df_beerAdvocate.groupby('beer_id').filter(lambda x: len(x) > 10)
+
+    return time_df_reviews, time_df_beerAdvocate
+
+
+def load_data_first_rating(data_path='data/BeerAdvocate/ratings.csv', min_count=1000, first=True):
+    """
+    Return the dataframe used for first vs other rating influence
+
+    Parameters
+    ----------
+    data_path: The path to the analysis files
+    min_count: The minimum of review a beer need so that its rating is considered valid
+    first: If True, compare the first rating, if false take the last one (only to show differences)
+
+    Returns
+    -------
+    The dataframe used for the analysis
+    """
+
+    # load the rating dataset
+    ratings_df = pd.read_csv(data_path)
+
+    # select usefull columns and sort by date
+    rating_per_date = ratings_df[['beer_id', 'beer_name', 'date', 'rating']].sort_values(by=['beer_id', 'date'], ascending=first)
+    rating_per_date = rating_per_date.dropna()
+
+    # add a columns containing the count of review per beers
+    rating_per_date['count'] = rating_per_date.groupby('beer_id')['beer_id'].transform('count')
+
+    # drop the columns with unsignificative final rate
+    rating_per_date = rating_per_date[rating_per_date['count'] > min_count]
+
+    # split the dataset between first rating and every other
+    first_rating = rating_per_date.groupby('beer_id').head(1)
+    others_rating = rating_per_date.drop(first_rating.index)
+    others_rating = others_rating.groupby(by='beer_id').agg(beer_name=('beer_name', 'min'), other_rating=('rating', 'mean'), other_std=('rating', 'std'))
+
+    # merge the two dataset with each rating in distinct columns
+    first_vs_other_rating = pd.merge(others_rating, first_rating[['beer_id', 'rating']], on='beer_id', how='left')
+    first_vs_other_rating = first_vs_other_rating.rename(columns={'rating': 'first_rating'})
+
+    return first_vs_other_rating
+
+
+def load_beer_consumption_dataframe(beer_consumption_path='data/BeerConsumption.csv', breweries_path='data/BeerAdvocate/breweries.csv', rating_path='data/BeerAdvocate/ratings.csv'):
+    """
+    Return the dataframe used for the beer consumption analysis
+
+    Parameters
+    ----------
+    beer_consumption_path: The path to the beer consumption file
+    breweries_path: The breweries dataset path
+    rating_path: The rating dataset path
+
+    Returns
+    -------
+    The dataframe used for the analysis
+    """
+
+    # load the 3 differents datasets
+    beerConsumption_df = pd.read_csv(beer_consumption_path)
+    breweries_df = pd.read_csv(breweries_path)
+    ratings_df = pd.read_csv(rating_path)
+
+    # merge the 3 dataset by beer_id and location
+    merge_df = ratings_df.merge(breweries_df, left_on='beer_id', right_index=True)
+
+    merge_df['location'] = merge_df['location'].str.strip().str.lower()
+    beerConsumption_df['country'] = beerConsumption_df['country'].str.strip().str.lower()
+
+    merged_df = merge_df.merge(beerConsumption_df, left_on='location', right_on='country')
+
+    # merge 2020 dans 2021 beer conumption to get an average
+    merged_df['beer_consumption_per_capita'] = (merged_df['BeerConsumptionPerCapitakg2021'] + merged_df['BeerConsumptionPerCapitakg2021'])/2
+
+    # keep usefull columns
+    merged_df = merged_df[['beer_id', 'beer_name', 'rating', 'location', 'beer_consumption_per_capita']]
+
+    merged_df.dropna()
+
+    # group by country and keep the average rating per country
+    merged_df = merged_df.groupby('location').agg(rating=('rating', 'mean'), beer_consumption_per_capita=('beer_consumption_per_capita', 'min'))
+
+    return merged_df
