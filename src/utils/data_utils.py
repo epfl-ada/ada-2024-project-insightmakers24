@@ -1,6 +1,64 @@
-import os.path
-
+import os
 import pandas as pd
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+from nltk.tokenize import word_tokenize
+import string
+
+# Import useful nltk packages
+nltk.download("punkt")
+nltk.download("stopwords")
+
+# Constants
+stemmer = PorterStemmer()
+stop_words = set(stopwords.words("english"))
+
+def convert_name_to_stemmed_keywords(name):
+    """
+    Take a beer name and convert it to it's stemmed word tokens
+
+    Parameters
+    ----------
+    name: The name of a beer
+
+    Returns
+    -------
+    List of stemmed word tokens
+    """
+    # Lowercase and remove punctuation
+    processed_name = name.lower()
+    processed_name = processed_name.translate(str.maketrans('', '', string.punctuation))
+
+    # Split by word and remove stop words
+    tokens = word_tokenize(processed_name)
+    tokens = [word for word in tokens if word not in stop_words]
+
+    # Stem words to handle similar forms of words (tense, plural, ...)
+    stemmed_tokens = [stemmer.stem(word) for word in tokens]
+
+    # Return these stemmed words as the keywords of the beer name
+    return stemmed_tokens
+
+
+def load_name_keyword_data(path):
+    """
+    Load the relevant data for the name keyword analysis
+
+    Parameters
+    ----------
+    path: The path to the data folder
+
+    Returns
+    -------
+    The relevant dataframe for the name keyword analysis
+    """
+    beers = pd.read_csv(os.path.join(path, "beers.csv"))
+
+    # Keep only significant beers and columns (at least 10 reviews)
+    relevant_beers = beers[beers["nbr_ratings"] >= 10][["beer_id", "beer_name", "nbr_ratings", "avg"]]
+
+    return relevant_beers
 
 
 def txt_to_csv(path):
@@ -37,7 +95,7 @@ def txt_to_csv(path):
 
 def load_country_bias_data(path):
     """
-    Loads and do basic cleaning for the country bias analysis
+    Load and do basic cleaning for the country bias analysis
 
     Parameters
     ----------
@@ -49,9 +107,9 @@ def load_country_bias_data(path):
     """
 
     # Load rating, user and breweries infos
-    df_ratings = pd.read_csv(path + 'ratings.csv')
-    df_users = pd.read_csv(path + 'users.csv')
-    df_breweries = pd.read_csv(path + 'breweries.csv')
+    df_ratings = pd.read_csv(os.path.join(path, 'ratings.csv'))
+    df_users = pd.read_csv(os.path.join(path, 'users.csv'))
+    df_breweries = pd.read_csv(os.path.join(path, 'breweries.csv'))
 
     df_users_filtered = df_users[df_users.nbr_ratings > 1]
     df_ratings_clean = df_ratings.dropna(subset=['appearance', 'aroma', 'palate', 'taste', 'overall', 'rating'])
