@@ -135,3 +135,7 @@ To investigate whether the name of a beer impacts its final rating, we will use 
 - Romain: Anchoring effect Investigation (part 2)
 - Yann: Country biases analysis and readme and data story (part 3)
 - Edgar Desnos: Beer Names influence (part 4)
+
+## Datastory website
+
+The datastory of the project can be found at this link: https://romainlogean.github.io/ada-template-website/
