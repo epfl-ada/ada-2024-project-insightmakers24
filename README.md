@@ -90,12 +90,20 @@ To see this influence, we compared the first rating with the mean of every other
 We performed Pearson and Spearman tests to see whether a higher initial rating correlates with a higher final rating. Both tests show us a clear correlation, which is expected since the rating concerne the same beer. We know that the effect of the first rating exists, it is known as  the anchoring effect, but for now we cannot affirm that what we observed was uniquely related to this effect. 
 It would be to investigate further about the anchoring effect, and also check if the ratings that were the most recents at the time when someone gave a rating have an influence, or perhaps if the rating that content some text review enhances this effect.
 
-### Part 3: Country biases investigation
+### Part 3: Country biases investigation
 
-For the initial analysis, we focus on the BeerAdvocate dataset, particularly: ratings.txt, users.csv and breweries.csv. Note that ratings.txt was converted to a csv for convenience. 
-Histograms based on the ratings for both the ratings where the user comes from the same location (domestic) and the ratings where the user comes from another location (international), we notice a slight distribution difference. A t-test and mean comparisons suggest that users that come from the same country as the beer might indeed tend to give slightly higher ratings.
+In this part, we try to find if users that come from the same location as the beer put higher ratings for the beer.
+We do the analysis on both BeerAdvocate and RateBeer datasets and compare the results to see if there is indeed a bias
+in the ratings. Note that txt files have been converted to csv files for convenience.  
 
-We also merged the beer consumption dataset to the ratings and the breweries to see if there is a relation between the mean ratings per location and the beer consumption per capita in this location. We find a significant correlation between the two variables, however the country bias partly explains this correlation so we will need to first correct the ratings from the country bias. We can also explore how the bias varies depending on the country or depending on the beer type.
+We first do a linear regression analysis on a subset of the data to see if domestic ratings have a positive influence
+on the ratings. Then we plot jointly the histogram for domestic ratings and international ratings to see if there is
+a shift in their distributions. We also do a boxplot of the ratings and show the means with error bars. Then we perform
+a propensity score matching to balance the datasets and redo the above steps. Finally, we do a t-test on the domestic and 
+international ratings to see if there is a significant difference in the ratings. All these steps are done on both the 
+BeerAdvocate and RateBeer datasets.  
+
+We also merge the beer consumption dataset to the ratings and the breweries to see if there is a relation between the mean ratings per location and the beer consumption per capita in this location.
 
 ### Part 4: Influence of Beer Names on Ratings
 
