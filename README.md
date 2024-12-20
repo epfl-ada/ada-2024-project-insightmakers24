@@ -37,9 +37,13 @@ The directory structure of new project looks like this:
 │
 ├── src                         <- Source code
 │   ├── data                            <- Data directory
-│   ├── models                          <- Model directory
-│   ├── utils                           <- Utility directory
-│   ├── scripts                         <- Shell scripts
+│   │   ├── time_bias.py                    <- Analysis functions for part 1
+│   │   ├── anchoring_bias.py               <- Analysis functions for part 2
+│   │   ├── country_bias.py                 <- Analysis functions for part 3
+│   │   └── name_bias.py                    <- Analysis functions for part 4
+│   │
+│   └── utils                           <- Utility directory
+│       └── data_utils.py                   <- Helper functions
 │
 ├── tests                       <- Tests of any kind
 │
@@ -77,18 +81,22 @@ We will use this data to explore whether a country's overall beer consumption in
 
 ### Part 1: Influence of time on the ratings
 
-We have examined the overall ratings for all beer to see whether people rate differently through time. We will also investigate whether there are certain moments in time where the ratings are higher or lower than on average to see if there are some trends for this beer that influences its rating. Lastly we will check if certain days or weeks have a notable difference and try to link these to holidays, events or festivals to see if these can influence the rating of the beer.
+In this first part we have looked at the influence of time and the bias it can create on the rating for the beer. We have examined the overall ratings and the number of reviews for all beer to see how it evolves through time for both dataset, we did the same for the rating per style of beer for a sample of them. We have looked how these rating are affected by time. Lastly we have compared for two holidays the rating to see if these can influence the rating of the beer.
 
-To do this we principally use the rating.csv file from both dataset. We have analyzed the overall evolution of the rating through the year for both dataset and use different metrics to see how the user’s rating evolves. Then, we will compute the average rating over time and check if we find significant disparities. This analysis will be conducted twice, first by month, to identify any seasonal effects or periodic trends, and second by day, to detect any patterns related to specific events and holidays. 
+To do this we principally use the rating.csv file from both dataset. We have analyzed the overall evolution of the rating through the year for both dataset and use different metrics to measure and see how the user’s rating evolves. We separated the date to year, month and day and then separate the day linked to the holidays from the others to do the comparison on them.
 
-This will show us if there is a bias introduced in the rating from all these factors and how much they influence the ratings.
+This shows us that there is a bias introduced in the rating from some of these factors and how much they influence the ratings.
 
 ### Part 2: Impact of initial and Anchoring Effect 
 
-As we all know, the perspective of others can influence our own opinion. So we can imagine that the initial rating will have a large impact on the final rating.
-To see this influence, we compared the first rating with the mean of every other rating. We check the correlation between these ratings, and it appears to be higher than the correlation between the last rating and the others.
-We performed Pearson and Spearman tests to see whether a higher initial rating correlates with a higher final rating. Both tests show us a clear correlation, which is expected since the rating concerne the same beer. We know that the effect of the first rating exists, it is known as  the anchoring effect, but for now we cannot affirm that what we observed was uniquely related to this effect. 
-It would be to investigate further about the anchoring effect, and also check if the ratings that were the most recents at the time when someone gave a rating have an influence, or perhaps if the rating that content some text review enhances this effect.
+As we all know, the perspective of others can influence our own opinion, this is known as the anchoring effect. 
+So we can imagine that the initial rating will have a large impact on the final rating.
+To see this influence, we first observed the disctibution of the rating over time for every individual beer. 
+We observed that the rating given tend to converge around 3 with time, so we plot the distance between the mean rating and 3 (the average rating) and see that this tendancy appears for most of the beers. 
+We performed Pearson and Spearman tests to see whether a higher initial rating correlates with a higher final rating. Both tests show us a clear correlation, which is expected since the rating concerne the same beer. We know that the effect of the first rating exists, it is known as the anchoring effect, but for now we cannot affirm that what we observed was uniquely related to this effect. 
+Finally, we used the bros score of BeerAdvocate, and compare it with the overall rating of two groups: the beers with a very high or a very low first rating. 
+We found that with a high first rating have a higher overall rating that the bros score, and with a low first rating have a lower overall rating that the bros score. 
+According to a statistical T-test, these differences that these differences are significant.
 
 ### Part 3: Country biases investigation
 
@@ -123,7 +131,7 @@ To investigate whether the name of a beer impacts its final rating, we will use 
 ## Organization within the team
 
 - Huiyun Zhu: Writing up the report or the data story, preparing the final presentation
-- Oliver: Code and readme for the time analysis (part 1)
+- Oliver: Code/discussion, readme and data story for the time analysis (part 1)
 - Romain: Anchoring effect Investigation (part 2)
 - Yann: Country biases analysis and readme (part 3)
 - Edgar Desnos: Beer Names influence (part 4)

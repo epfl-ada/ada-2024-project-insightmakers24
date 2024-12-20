@@ -131,43 +131,6 @@ def load_country_bias_data(path):
     return df_ratings_locs.dropna()
 
 
-def load_time_bias_data(path):
-    """
-    Loads and do basic cleaning for the time bias analysis
-
-    Parameters
-    ----------
-    path: The path to the analysis files
-
-    Returns
-    -------
-    Clean dataset used for the analysis
-    """
-
-    # load the data
-    time_df_rateBeer = pd.read_csv(os.path.join(path, 'RateBeer/reviews.csv'))
-    time_df_beerAdvocate = pd.read_csv(os.path.join(path, 'BeerAdvocate/reviews.csv'))
-
-    # Create time column from the unix format for both dataset
-    time_df_rateBeer['time'] = pd.to_datetime(time_df_rateBeer['date'], origin='unix', unit='s')
-    time_df_rateBeer['year'] = time_df_rateBeer['time'].dt.year
-    time_df_rateBeer['month'] = time_df_rateBeer['time'].dt.month
-    time_df_rateBeer['day'] = time_df_rateBeer['time'].dt.day
-    time_df_beerAdvocate['time'] = pd.to_datetime(time_df_beerAdvocate['date'], origin='unix', unit='s')
-    time_df_beerAdvocate['year'] = time_df_beerAdvocate['time'].dt.year
-    time_df_beerAdvocate['month'] = time_df_beerAdvocate['time'].dt.month
-    time_df_beerAdvocate['day'] = time_df_beerAdvocate['time'].dt.day
-
-    # Data cleaning
-    time_df_rateBeer = time_df_rateBeer.dropna()
-    time_df_beerAdvocate = time_df_beerAdvocate.dropna()
-    # Remove the beer with less than 10 reviews
-    time_df_rateBeer = time_df_rateBeer.groupby('beer_id').filter(lambda x: len(x) > 10)
-    time_df_beerAdvocate = time_df_beerAdvocate.groupby('beer_id').filter(lambda x: len(x) > 10)
-
-    return time_df_rateBeer, time_df_beerAdvocate
-
-
 def load_data_first_rating(data_path='data/BeerAdvocate/ratings.csv', min_count=1000, first=True):
     """
     Return the dataframe used for first vs other rating influence
