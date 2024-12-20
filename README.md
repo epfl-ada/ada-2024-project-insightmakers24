@@ -133,7 +133,7 @@ To investigate whether the name of a beer impacts its final rating, we will use 
 - Huiyun Zhu: Writing up the report or the data story, preparing the final presentation
 - Oliver Sorrentino: Code/discussion, readme and data story for the time analysis (part 1)
 - Romain Logean: Code/discussion, readme and data story for anchoring effect Investigation (part 2)
-- Yann Becker: Code/discussion, readme and data story for country biases analysis and readme and data story (part 3)
+- Yann Becker: Code/discussion, readme and data story for country biases analysis (part 3)
 - Edgar Desnos: Code/discussion, readme and data story for beer Names influence (part 4)
 
 ## Datastory website
