@@ -90,7 +90,7 @@ To see this influence, we compared the first rating with the mean of every other
 We performed Pearson and Spearman tests to see whether a higher initial rating correlates with a higher final rating. Both tests show us a clear correlation, which is expected since the rating concerne the same beer. We know that the effect of the first rating exists, it is known as  the anchoring effect, but for now we cannot affirm that what we observed was uniquely related to this effect. 
 It would be to investigate further about the anchoring effect, and also check if the ratings that were the most recents at the time when someone gave a rating have an influence, or perhaps if the rating that content some text review enhances this effect.
 
-### Part 3: Country biases investigation
+### Part 3: Country biases investigation
 
 For the initial analysis, we focus on the BeerAdvocate dataset, particularly: ratings.txt, users.csv and breweries.csv. Note that ratings.txt was converted to a csv for convenience. 
 Histograms based on the ratings for both the ratings where the user comes from the same location (domestic) and the ratings where the user comes from another location (international), we notice a slight distribution difference. A t-test and mean comparisons suggest that users that come from the same country as the beer might indeed tend to give slightly higher ratings.

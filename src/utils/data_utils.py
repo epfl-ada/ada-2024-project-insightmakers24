@@ -1,26 +1,17 @@
 import os
 import pandas as pd
-import nltk
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 import string
 
-# Import useful nltk packages
-nltk.download("punkt")
-nltk.download("stopwords")
-
-# Constants
-stemmer = PorterStemmer()
-stop_words = set(stopwords.words("english"))
-
-def convert_name_to_stemmed_keywords(name):
+def convert_name_to_stemmed_keywords(name, stop_words, stemmer):
     """
     Take a beer name and convert it to it's stemmed word tokens
 
     Parameters
     ----------
     name: The name of a beer
+    stop_words: A list of stopwords
+    stemmer: Stemmer to stem words that are similar to a "normalized" word
 
     Returns
     -------
@@ -204,45 +195,3 @@ def load_data_first_rating(data_path='data/BeerAdvocate/ratings.csv', min_count=
     first_vs_other_rating = first_vs_other_rating.rename(columns={'rating': 'first_rating'})
 
     return first_vs_other_rating
-
-
-def load_beer_consumption_dataframe(beer_consumption_path='data/BeerConsumption.csv', breweries_path='data/BeerAdvocate/breweries.csv', rating_path='data/BeerAdvocate/ratings.csv'):
-    """
-    Return the dataframe used for the beer consumption analysis
-
-    Parameters
-    ----------
-    beer_consumption_path: The path to the beer consumption file
-    breweries_path: The breweries dataset path
-    rating_path: The rating dataset path
-
-    Returns
-    -------
-    The dataframe used for the analysis
-    """
-
-    # load the 3 differents datasets
-    beerConsumption_df = pd.read_csv(beer_consumption_path)
-    breweries_df = pd.read_csv(breweries_path)
-    ratings_df = pd.read_csv(rating_path)
-
-    # merge the 3 dataset by beer_id and location
-    merge_df = ratings_df.merge(breweries_df, left_on='beer_id', right_index=True)
-
-    merge_df['location'] = merge_df['location'].str.strip().str.lower()
-    beerConsumption_df['country'] = beerConsumption_df['country'].str.strip().str.lower()
-
-    merged_df = merge_df.merge(beerConsumption_df, left_on='location', right_on='country')
-
-    # merge 2020 dans 2021 beer conumption to get an average
-    merged_df['beer_consumption_per_capita'] = (merged_df['BeerConsumptionPerCapitakg2021'] + merged_df['BeerConsumptionPerCapitakg2021'])/2
-
-    # keep usefull columns
-    merged_df = merged_df[['beer_id', 'beer_name', 'rating', 'location', 'beer_consumption_per_capita']]
-
-    merged_df.dropna()
-
-    # group by country and keep the average rating per country
-    merged_df = merged_df.groupby('location').agg(rating=('rating', 'mean'), beer_consumption_per_capita=('beer_consumption_per_capita', 'min'))
-
-    return merged_df
