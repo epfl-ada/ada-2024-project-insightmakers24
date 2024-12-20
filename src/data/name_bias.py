@@ -2,6 +2,7 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
+import pandas as pd
 import string
 
 # Constants
