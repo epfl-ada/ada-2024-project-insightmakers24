@@ -169,7 +169,7 @@ def compare_control_and_treatment(df, beer_advocate=True):
     if beer_advocate:
         axe3.set_ylim(3.8, 4)
     else:
-        axe3.set_ylim(3, 3.6)
+        axe3.set_ylim(3.2, 3.4)
 
     plt.tight_layout()
 
