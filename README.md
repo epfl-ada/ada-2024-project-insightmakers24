@@ -77,11 +77,11 @@ We will use this data to explore whether a country's overall beer consumption in
 
 ### Part 1: Influence of time on the ratings
 
-We have examined the overall ratings for all beer to see whether people rate differently through time. We will also investigate whether there are certain moments in time where the ratings are higher or lower than on average to see if there are some trends for this beer that influences its rating. Lastly we will check if certain days or weeks have a notable difference and try to link these to holidays, events or festivals to see if these can influence the rating of the beer.
+In this first part we have looked at the influence of time and the bias it can create on the rating for the beer. We have examined the overall ratings and the number of reviews for all beer to see how it evolves through time for both dataset, we did the same for the rating per style of beer for a sample of them. We have looked how these rating are affected by time. Lastly we have compared for two holidays the rating to see if these can influence the rating of the beer.
 
-To do this we principally use the rating.csv file from both dataset. We have analyzed the overall evolution of the rating through the year for both dataset and use different metrics to see how the user’s rating evolves. Then, we will compute the average rating over time and check if we find significant disparities. This analysis will be conducted twice, first by month, to identify any seasonal effects or periodic trends, and second by day, to detect any patterns related to specific events and holidays. 
+To do this we principally use the rating.csv file from both dataset. We have analyzed the overall evolution of the rating through the year for both dataset and use different metrics to measure and see how the user’s rating evolves. We separated the date to year, month and day and then separate the day linked to the holidays from the others to do the comparison on them.
 
-This will show us if there is a bias introduced in the rating from all these factors and how much they influence the ratings.
+This shows us that there is a bias introduced in the rating from some of these factors and how much they influence the ratings.
 
 ### Part 2: Impact of initial and Anchoring Effect 
 
@@ -123,7 +123,7 @@ To investigate whether the name of a beer impacts its final rating, we will use 
 ## Organization within the team
 
 - Huiyun Zhu: Writing up the report or the data story, preparing the final presentation
-- Oliver: Code and readme for the time analysis (part 1)
+- Oliver: Code/discussion, readme and data story for the time analysis (part 1)
 - Romain: Anchoring effect Investigation (part 2)
 - Yann: Country biases analysis and readme (part 3)
 - Edgar Desnos: Beer Names influence (part 4)
